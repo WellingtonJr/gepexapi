@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,11 +29,11 @@ public class EscolaController {
     private EscolaService escolaService;
 
     @PostMapping
-    public ResponseEntity<Object> save(@Valid EscolaDto dto) {
-
-        if (escolaService.existsByNome(dto.getNome())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Already exists.");
-        }
+    public ResponseEntity<Object> save(@RequestBody @Valid EscolaDto dto) {
+        System.out.println(dto.toString());
+        // if (escolaService.existsByNome(dto.getNome())) {
+        // return ResponseEntity.status(HttpStatus.CONFLICT).body("Already exists.");
+        // }
         var escola = new Escola();
         BeanUtils.copyProperties(dto, escola);
 
@@ -56,7 +57,7 @@ public class EscolaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") UUID id, @Valid EscolaDto dto) {
+    public ResponseEntity<Object> update(@PathVariable("id") UUID id, @RequestBody @Valid EscolaDto dto) {
         var escola = escolaService.findById(id);
         if (!escola.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found.");
